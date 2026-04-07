@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GREEN-API Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #eef2f7;
+      min-height: 100vh;
+    }
+
+    /* ── TOP NAV ── */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-icon svg { width: 22px; height: 22px; fill: #fff; }
+
+    .brand-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .topbar-badge {
+      font-size: 0.72rem;
+      background: #dcfce7;
+      color: #16a34a;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 40px 60px;
+    }
+
+    .page-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 0.88rem;
+      color: #64748b;
+      margin-bottom: 28px;
+    }
+
+    /* ── CREDENTIALS BAR ── */
+    .creds-bar {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .creds-bar .field { flex: 1; }
+
+    .creds-bar .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .creds-bar input {
+      width: 100%;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 0.92rem;
+      color: #0f172a;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .creds-bar input:focus {
+      border-color: #25d366;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(37,211,102,0.13);
+    }
+
+    .creds-hint {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    /* ── METHOD CARD ── */
+    .method-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 26px 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .method-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .method-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      letter-spacing: 0.05em;
+    }
+    .badge-get  { background: #dbeafe; color: #1d4ed8; }
+    .badge-post { background: #fef3c7; color: #b45309; }
+
+    .method-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      font-family: 'Courier New', monospace;
+    }
+
+    .method-desc {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .field input {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 13px;
+      font-size: 0.88rem;
+      color: #0f172a;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input:focus {
+      border-color: #25d366;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(37,211,102,0.13);
+    }
+
+    .spacer { flex: 1; }
+
+    .btn {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.1s, box-shadow 0.18s;
+      width: 100%;
+    }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #25d366, #20b858);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(37,211,102,0.3);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #20b858, #1aa34a);
+      box-shadow: 0 4px 14px rgba(37,211,102,0.4);
+    }
+
+    .status-indicator {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      flex-shrink: 0;
+    }
+    .status-indicator.loading { background: #fbbf24; animation: blink 0.8s infinite; }
+    .status-indicator.ok      { background: #fff; }
+    .status-indicator.err     { background: #fca5a5; }
+
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.2; }
+    }
+
+    /* ── RESPONSE PANEL ── */
+    .response-panel {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .response-panel-header {
+      background: #0f172a;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .response-panel-header .left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .terminal-dots span {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .terminal-dots span:nth-child(1) { background: #ef4444; }
+    .terminal-dots span:nth-child(2) { background: #f59e0b; }
+    .terminal-dots span:nth-child(3) { background: #22c55e; }
+
+    .response-label {
+      font-size: 0.78rem;
+      color: #64748b;
+      font-family: 'Courier New', monospace;
+      margin-left: 4px;
+    }
+
+    .clear-btn {
+      font-size: 0.72rem;
+      color: #475569;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 5px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .clear-btn:hover { background: #334155; color: #f1f5f9; }
+
+    #response {
+      display: block;
+      width: 100%;
+      min-height: 200px;
+      background: #0f172a;
+      color: #86efac;
+      border: none;
+      padding: 20px 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      resize: vertical;
+      outline: none;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .page { padding: 24px 20px 48px; }
+      .topbar { padding: 0 20px; }
+      .grid { grid-template-columns: 1fr; }
+      .creds-bar { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.852L0 24l6.335-1.508A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.213-3.76.895.952-3.653-.234-.374A9.818 9.818 0 1112 21.818z"/></svg>
+    </div>
+    <div>
+      <span class="brand-name">GREEN-API</span>
+      <span class="brand-sub">WhatsApp HTTP API</span>
+    </div>
+  </div>
+  <span class="topbar-badge">Developer Demo</span>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+  <div class="page-title">API Method Tester</div>
+  <div class="page-sub">Enter your instance credentials, then call any method and inspect the response below.</div>
+
+  <!-- CREDENTIALS -->
+  <div class="creds-bar">
+    <div class="field">
+      <label for="idInstance">idInstance</label>
+      <input type="text" id="idInstance" placeholder="e.g. 1101000001" autocomplete="off" />
+      <div class="creds-hint">Found in your GREEN-API console</div>
+    </div>
+    <div class="field">
+      <label for="apiToken">ApiTokenInstance</label>
+      <input type="password" id="apiToken" placeholder="Your API token" autocomplete="off" />
+      <div class="creds-hint">Keep this secret</div>
+    </div>
+  </div>
+
+  <!-- METHOD CARDS -->
+  <div class="grid">
+
+    <!-- getSettings -->
+    <div class="method-card">
+      <div class="method-header">
+        <span class="method-badge badge-get">GET</span>
+        <span class="method-title">getSettings</span>
+      </div>
+      <p class="method-desc">Returns the current configuration of your instance — webhook URLs, message delays, notification toggles, and more.</p>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" onclick="callGetSettings()">
+        <span class="status-indicator" id="dot-getSettings"></span>
+        Run getSettings
+      </button>
+    </div>
+
+    <!-- getStateInstance -->
+    <div class="method-card">
+      <div class="method-header">
+        <span class="method-badge badge-get">GET</span>
+        <span class="method-title">getStateInstance</span>
+      </div>
+      <p class="method-desc">Returns the current authorization state of the instance — whether it is authorized, not authorized, or blocked.</p>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" onclick="callGetStateInstance()">
+        <span class="status-indicator" id="dot-getStateInstance"></span>
+        Run getStateInstance
+      </button>
+    </div>
+
+    <!-- sendMessage -->
+    <div class="method-card">
+      <div class="method-header">
+        <span class="method-badge badge-post">POST</span>
+        <span class="method-title">sendMessage</span>
+      </div>
+      <p class="method-desc">Sends a text message to a personal or group chat. The message is queued and sent immediately if the instance is authorized.</p>
+      <div class="field">
+        <label for="sendTo">Recipient chatId</label>
+        <input type="text" id="sendTo" placeholder="79001234567@c.us" />
+      </div>
+      <div class="field">
+        <label for="sendText">Message text</label>
+        <input type="text" id="sendText" placeholder="Hello from GREEN-API!" />
+      </div>
+      <button class="btn btn-primary" onclick="callSendMessage()">
+        <span class="status-indicator" id="dot-sendMessage"></span>
+        Run sendMessage
+      </button>
+    </div>
+
+    <!-- sendFileByUrl -->
+    <div class="method-card">
+      <div class="method-header">
+        <span class="method-badge badge-post">POST</span>
+        <span class="method-title">sendFileByUrl</span>
+      </div>
+      <p class="method-desc">Sends a file from an external URL. Supports images, video, audio, and documents up to 100 MB.</p>
+      <div class="field">
+        <label for="fileTo">Recipient chatId</label>
+        <input type="text" id="fileTo" placeholder="79001234567@c.us" />
+      </div>
+      <div class="field">
+        <label for="fileUrl">File URL</label>
+        <input type="text" id="fileUrl" placeholder="https://example.com/image.jpg" />
+      </div>
+      <div class="field">
+        <label for="fileName">File name</label>
+        <input type="text" id="fileName" placeholder="image.jpg" />
+      </div>
+      <div class="field">
+        <label for="fileCaption">Caption (optional)</label>
+        <input type="text" id="fileCaption" placeholder="Check this out!" />
+      </div>
+      <button class="btn btn-primary" onclick="callSendFileByUrl()">
+        <span class="status-indicator" id="dot-sendFileByUrl"></span>
+        Run sendFileByUrl
+      </button>
+    </div>
+
+  </div>
+
+  <!-- RESPONSE -->
+  <div class="response-panel">
+    <div class="response-panel-header">
+      <div class="left">
+        <div class="terminal-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="response-label">response output — read only</span>
+      </div>
+      <button class="clear-btn" onclick="clearResponse()">Clear</button>
+    </div>
+    <textarea id="response" readonly>// Response will appear here after calling a method...</textarea>
+  </div>
+
+  <div class="footer">GREEN-API © 2025</div>
+</div>
+
+<script>
+  const API_BASE = 'https://api.green-api.com';
+
+  function getCredentials() {
+    const id    = document.getElementById('idInstance').value.trim();
+    const token = document.getElementById('apiToken').value.trim();
+    if (!id || !token) {
+      showResponse('⚠  Please fill in idInstance and ApiTokenInstance first.', 'err');
+      return null;
+    }
+    return { id, token };
+  }
+
+  function setDot(method, state) {
+    const el = document.getElementById('dot-' + method);
+    if (el) el.className = 'status-indicator ' + state;
+  }
+
+  function showResponse(text) {
+    document.getElementById('response').value = text;
+    document.getElementById('response').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function clearResponse() {
+    document.getElementById('response').value = '// Response will appear here after calling a method...';
+    ['getSettings','getStateInstance','sendMessage','sendFileByUrl'].forEach(m => setDot(m, ''));
+  }
+
+  async function apiGet(path, method) {
+    setDot(method, 'loading');
+    showResponse('⏳  Calling ' + method + '...');
+    try {
+      const res  = await fetch(API_BASE + path);
+      const data = await res.json();
+      showResponse(JSON.stringify(data, null, 2));
+      setDot(method, res.ok ? 'ok' : 'err');
+    } catch (e) {
+      showResponse('❌  Error: ' + e.message);
+      setDot(method, 'err');
+    }
+  }
+
+  async function apiPost(path, body, method) {
+    setDot(method, 'loading');
+    showResponse('⏳  Calling ' + method + '...');
+    try {
+      const res  = await fetch(API_BASE + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      showResponse(JSON.stringify(data, null, 2));
+      setDot(method, res.ok ? 'ok' : 'err');
+    } catch (e) {
+      showResponse('❌  Error: ' + e.message);
+      setDot(method, 'err');
+    }
+  }
+
+  function callGetSettings() {
+    const c = getCredentials();
+    if (!c) return;
+    apiGet(`/waInstance${c.id}/getSettings/${c.token}`, 'getSettings');
+  }
+
+  function callGetStateInstance() {
+    const c = getCredentials();
+    if (!c) return;
+    apiGet(`/waInstance${c.id}/getStateInstance/${c.token}`, 'getStateInstance');
+  }
+
+  function callSendMessage() {
+    const c = getCredentials();
+    if (!c) return;
+    const chatId  = document.getElementById('sendTo').value.trim();
+    const message = document.getElementById('sendText').value.trim();
+    if (!chatId || !message) {
+      showResponse('⚠  Please fill in Recipient and Message text.');
+      return;
+    }
+    apiPost(`/waInstance${c.id}/sendMessage/${c.token}`, { chatId, message }, 'sendMessage');
+  }
+
+  function callSendFileByUrl() {
+    const c = getCredentials();
+    if (!c) return;
+    const chatId   = document.getElementById('fileTo').value.trim();
+    const urlFile  = document.getElementById('fileUrl').value.trim();
+    const fileName = document.getElementById('fileName').value.trim();
+    const caption  = document.getElementById('fileCaption').value.trim();
+    if (!chatId || !urlFile || !fileName) {
+      showResponse('⚠  Please fill in Recipient, File URL and File name.');
+      return;
+    }
+    const body = { chatId, urlFile, fileName };
+    if (caption) body.caption = caption;
+    apiPost(`/waInstance${c.id}/sendFileByUrl/${c.token}`, body, 'sendFileByUrl');
+  }
+</script>
+</body>
+</html>
